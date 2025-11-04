@@ -3,8 +3,8 @@
 
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet('https://nn.api-minecraft.net/p/raw/pkdjtm5dpd'))()
-local SaveManager = loadstring(game:HttpGet('https://nn.api-minecraft.net/p/raw/4yrufv213o'))()
+local ThemeManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/ampules/axx/refs/heads/main/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/ampules/axx/refs/heads/main/SaveManager.lua'))()
 
 local Window = Library:CreateWindow({
     Title = 'axx',
@@ -871,12 +871,19 @@ AimRight:AddSlider('SmoothnessSlider', {
 })
 
 AimRight:AddDropdown('TargetPartDropdown', {
-    Values = {'Head', 'HumanoidRootPart', 'UpperTorso', 'LowerTorso'},
+    Values = {'head', 'humanoidrootpart', 'uppertorso', 'lowertorso'},
     Default = 1,
     Text = 'target part',
     Tooltip = 'part to aim at',
     Callback = function(Value)
-        TargetPart = Value
+        -- Convert lowercase display to actual part name
+        local partMap = {
+            head = 'Head',
+            humanoidrootpart = 'HumanoidRootPart',
+            uppertorso = 'UpperTorso',
+            lowertorso = 'LowerTorso'
+        }
+        TargetPart = partMap[Value] or Value
     end
 })
 
@@ -999,15 +1006,15 @@ SaveManager:BuildConfigSection(Tabs.Settings)
 -- NOTE: you can also call ThemeManager:ApplyToGroupbox to add it to a specific groupbox
 ThemeManager:ApplyToTab(Tabs.Settings)
 
--- Set default theme to black and white after theme manager is set up
+-- Set default theme with specified hex colors
 task.spawn(function()
     task.wait(0.5) -- Wait for theme manager to initialize
     if Options.BackgroundColor and Options.MainColor and Options.AccentColor then
-        Options.BackgroundColor:SetValueRGB(Color3.fromRGB(20, 20, 20))
-        Options.MainColor:SetValueRGB(Color3.fromRGB(255, 255, 255))
-        Options.AccentColor:SetValueRGB(Color3.fromRGB(255, 255, 255))
-        Options.OutlineColor:SetValueRGB(Color3.fromRGB(0, 0, 0))
-        Options.FontColor:SetValueRGB(Color3.fromRGB(255, 255, 255))
+        Options.BackgroundColor:SetValueRGB(Color3.fromHex('000000')) -- #000000
+        Options.MainColor:SetValueRGB(Color3.fromHex('000000')) -- #000000
+        Options.AccentColor:SetValueRGB(Color3.fromHex('1c1c1c')) -- #1c1c1c
+        Options.OutlineColor:SetValueRGB(Color3.fromHex('373737')) -- #373737
+        Options.FontColor:SetValueRGB(Color3.fromHex('ffffff')) -- #ffffff
         ThemeManager:ThemeUpdate()
     end
 end)
